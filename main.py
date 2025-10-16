@@ -1,7 +1,12 @@
 import os
 import requests
+import json
 from fastapi import FastAPI, HTTPException, Query
 from typing import Optional
+from dotenv import load_dotenv
+
+# .env dosyasını yükle
+load_dotenv()
 
 # FastAPI uygulamasını başlatıyoruz
 app = FastAPI(
@@ -67,7 +72,11 @@ async def get_financial_news(
             # Hata mesajını Apilayer'dan alıp Flutter'a iletiyoruz
             try:
                 error_detail = response.json().get("message", "Apilayer'dan bilinmeyen bir hata alındı.")
-            except:
+            except json.JSONDecodeError:
+                # Apilayer HTML veya başka bir formatta hata döndüyse
+                error_detail = "Apilayer'dan bilinmeyen bir hata alındı."
+            except Exception:
+                # Diğer tüm hatalar için
                 error_detail = "Apilayer'dan bilinmeyen bir hata alındı."
             
             raise HTTPException(
