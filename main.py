@@ -2,10 +2,6 @@ import os
 import requests
 from fastapi import FastAPI, HTTPException, Query
 from typing import Optional
-from dotenv import load_dotenv
-
-# .env dosyasını yükle
-load_dotenv()
 
 # FastAPI uygulamasını başlatıyoruz
 app = FastAPI(
