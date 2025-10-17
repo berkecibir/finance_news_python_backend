@@ -17,6 +17,9 @@ app = FastAPI(
 # API Anahtarınızı ortam değişkenlerinden alıyoruz. 
 # Render'a deploy ederken bu anahtarı ortam değişkeni olarak tanımlayacaksınız (API_KEY).
 # Bu, anahtarın kod içinde görünmesini engeller ve güvenliği artırır.
+# 
+# ÖNEMLİ: Asla burada gerçek API anahtarını sabit olarak atamayın!
+# Her zaman ortam değişkenlerini kullanın.
 API_KEY = os.environ.get("API_KEY", "YOUR_DEFAULT_API_KEY_OR_ERROR")
 BASE_URL = "https://api.apilayer.com/financelayer/news"
 
