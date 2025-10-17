@@ -26,6 +26,9 @@ async def startup_event():
     if API_KEY == "YOUR_DEFAULT_API_KEY_OR_ERROR":
         print("UYARI: API_KEY ortam değişkeni ayarlanmadı. Varsayılan veya sahte bir anahtar kullanılıyor olabilir.")
         # Gerçek bir üretim ortamında burada uygulamayı durdurmak isteyebilirsiniz.
+    else:
+        # API anahtarının uzunluğunu kontrol edelim (genellikle 32 karakter)
+        print(f"API Anahtarı yüklendi. Uzunluk: {len(API_KEY)} karakter")
 
 @app.get("/")
 def read_root():
@@ -74,10 +77,19 @@ async def get_financial_news(
                 error_detail = response.json().get("message", "Apilayer'dan bilinmeyen bir hata alındı.")
             except json.JSONDecodeError:
                 # Apilayer HTML veya başka bir formatta hata döndüyse
-                error_detail = "Apilayer'dan bilinmeyen bir hata alındı."
+                error_detail = f"Apilayer'dan bilinmeyen bir hata alındı. Status code: {response.status_code}"
             except Exception:
                 # Diğer tüm hatalar için
-                error_detail = "Apilayer'dan bilinmeyen bir hata alındı."
+                error_detail = f"Apilayer'dan bilinmeyen bir hata alındı. Status code: {response.status_code}"
+            
+            # 401 hatası özel durumu
+            if response.status_code == 401:
+                error_detail += " (Geçersiz veya eksik API anahtarı)"
+                
+                # API anahtarı bilgilerini logla (gerçek anahtarı gösterme)
+                print(f"401 Hatası - API Anahtarı uzunluğu: {len(API_KEY) if API_KEY else 0}")
+                if not API_KEY or API_KEY == "YOUR_DEFAULT_API_KEY_OR_ERROR":
+                    error_detail += " (API_KEY ortam değişkeni düzgün ayarlanmamış olabilir)"
             
             raise HTTPException(
                 status_code=response.status_code,

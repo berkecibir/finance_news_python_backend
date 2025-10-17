@@ -1,3 +1,7 @@
+# Environment variables
+.env
+!.env.example
+
 # Python
 __pycache__/
 *.py[cod]
@@ -21,25 +25,12 @@ wheels/
 *.egg
 MANIFEST
 
-# Virtual Environment
-venv/
-env/
-ENV/
-.venv/
-.env/
-.ENV/
-
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
-.DS_Store
-
-# Dotenv
-.env
-.env.local
-.env.*.local
 
 # OS
+.DS_Store
 Thumbs.db
