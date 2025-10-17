@@ -26,12 +26,17 @@ BASE_URL = "https://api.apilayer.com/financelayer/news"
 @app.on_event("startup")
 async def startup_event():
     """Uygulama başladığında API anahtarının kontrolünü yap."""
-    if API_KEY == "YOUR_DEFAULT_API_KEY_OR_ERROR":
-        print("UYARI: API_KEY ortam değişkeni ayarlanmadı. Varsayılan veya sahte bir anahtar kullanılıyor olabilir.")
+    print("API Anahtarı Kontrolü Başlatılıyor...")
+    if API_KEY == "YOUR_DEFAULT_API_KEY_OR_ERROR" or not API_KEY:
+        print("HATA: API_KEY ortam değişkeni düzgün ayarlanmamış!")
+        print("Lütfen aşağıdaki adımları izleyin:")
+        print("1. .env dosyasını kontrol edin ve geçerli bir API anahtarı girin")
+        print("2. Uygulamayı yeniden başlatın")
+        print("3. Production ortamındaysanız, platformunuzda API_KEY ortam değişkenini ayarlayın")
         # Gerçek bir üretim ortamında burada uygulamayı durdurmak isteyebilirsiniz.
     else:
         # API anahtarının uzunluğunu kontrol edelim (genellikle 32 karakter)
-        print(f"API Anahtarı yüklendi. Uzunluk: {len(API_KEY)} karakter")
+        print(f"BAŞARILI: API Anahtarı yüklendi. Uzunluk: {len(API_KEY)} karakter")
 
 @app.get("/")
 def read_root():
@@ -93,6 +98,12 @@ async def get_financial_news(
                 print(f"401 Hatası - API Anahtarı uzunluğu: {len(API_KEY) if API_KEY else 0}")
                 if not API_KEY or API_KEY == "YOUR_DEFAULT_API_KEY_OR_ERROR":
                     error_detail += " (API_KEY ortam değişkeni düzgün ayarlanmamış olabilir)"
+                else:
+                    error_detail += f" (API_KEY uzunluğu doğru: {len(API_KEY)} karakter, ancak anahtar geçersiz olabilir)"
+                    print("Lütfen aşağıdaki kontrolleri yapın:")
+                    print("1. API anahtarının Apilayer'da aktif olduğundan emin olun")
+                    print("2. API anahtarının doğru yazıldığından emin olun")
+                    print("3. API anahtarının süresinin dolmadığından emin olun")
             
             raise HTTPException(
                 status_code=response.status_code,
